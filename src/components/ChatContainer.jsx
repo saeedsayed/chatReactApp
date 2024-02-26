@@ -48,9 +48,9 @@ const ChatContainer = ({setOpenBar,openBar}) => {
                 </div>
             </div>
             <div className="sendFiled">
+                <button><AiOutlineSend /></button>
+                <button><AiOutlineSend /></button>
                 <input type="text" placeholder='Type a message'/>
-                <button><AiOutlineSend /></button>
-                <button><AiOutlineSend /></button>
                 <button><AiOutlineSend /></button>
             </div>
         </div>

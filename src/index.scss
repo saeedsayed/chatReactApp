@@ -7,6 +7,7 @@
   --scroll-bar-color: #8a8a8a;
   --hover-color: #e8e9e9;
   --chat-bg-color: #353535;
+  --owner-chat-bg-color: #005c4b;
 }
 
 .dark {
@@ -18,6 +19,7 @@
   --scroll-bar-color: #9f9f9f;
   --hover-color: #383838;
   --chat-bg-color: #353535;
+  --owner-chat-bg-color: #005c4b;
 }
 
 *,
@@ -59,10 +61,18 @@ button {
 }
 
 @mixin mobile {
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 568px) {
     @content;
   }
 }
+
+@mixin tablet {
+  @media screen and (max-width: 768px) {
+    @content
+  }
+}
+
+
 
 .container {
   display: flex;
@@ -82,6 +92,12 @@ button {
   text-align: center;
   border: 2px solid var(--border-color);
   box-shadow: -3px 10px 20px 0px rgba(0, 0, 0, 0.194);
+  @include mobile{
+    width: 100%;
+    padding: 10px;
+    border: none;
+    box-shadow: unset;
+  }
   // ****************************
   .title {
     font-size: 28px;
@@ -117,45 +133,75 @@ button {
     .input + span {
       position: absolute;
       left: 10px;
-      top: 15px;
+      top: 35px;
       color: grey;
-      font-size: 0.9rem;
+      font-size: 0.7rem;
       cursor: text;
       transition: 0.3s ease;
+    }
+    .input:focus {
+      border-color: var(--primary-color);
     }
     .input:placeholder-shown + span {
       top: 15px;
       font-size: 0.9rem;
     }
-    .input:focus + span,
-    .input:valid + span {
-      top: 35px;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-    .input:valid + span {
+    .input:focus + span {
       color: var(--primary-color);
     }
     .inputAvatar {
       display: none;
+      & + span {
+        cursor: pointer;
+        display: block;
+        border: 1px dashed black;
+        padding-block: 14px;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        -ms-border-radius: 10px;
+        -o-border-radius: 10px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      & + span:hover {
+        border: 1px dashed var(--primary-color);
+        background-color: var(--hover-color);
+      }
+      &:valid + span::after{
+        content: '👍';
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        border: 1px solid var(--primary-color);
+        background-color: var(--owner-chat-bg-color);
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        -ms-border-radius: 10px;
+        -o-border-radius: 10px;
+}
     }
-    .inputAvatar + span {
-      cursor: pointer;
-      display: block;
-      border: 1px dashed black;
-      padding-block: 14px;
-      border-radius: 10px;
-      -webkit-border-radius: 10px;
-      -moz-border-radius: 10px;
-      -ms-border-radius: 10px;
-      -o-border-radius: 10px;
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-    .inputAvatar + span:hover {
-      border: 1px dashed var(--primary-color);
-      background-color: var(--hover-color);
+  }
+  .error {
+    margin-block-end: -8px;
+    margin-block-start: 2px;
+    text-align: center;
+    font-size: 0.7rem;
+    background-color: #dc35468c;
+    border-radius: 10px;
+    padding: 6px 4px;
+    border: 1px solid #dc3545;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    a{
+      color: var(--primary-color);
     }
   }
   // ****************************
@@ -195,7 +241,7 @@ button {
     min-width: 250px;
     padding-block-end: 0;
     border: 1px solid var(--border-color);
-    @include mobile {
+    @include tablet {
       position: absolute;
       left: -300px;
       background-color: var(--bg-color);
@@ -252,9 +298,9 @@ button {
           -moz-border-radius: 6px;
           -ms-border-radius: 6px;
           -o-border-radius: 6px;
-          &.closeBar{
+          &.closeBar {
             display: none;
-            @include mobile {
+            @include tablet {
               display: block;
             }
           }
@@ -355,7 +401,7 @@ button {
       button {
         display: none;
       }
-      @include mobile {
+      @include tablet {
         button {
           display: block;
           border: none;
@@ -403,7 +449,6 @@ button {
         .chatContent {
           background-color: var(--chat-bg-color);
           padding: 8px;
-          padding-inline-start: 13px;
           border-radius: 0px 6px 6px 6px;
           -webkit-border-radius: 0px 6px 6px 6px;
           -moz-border-radius: 0px 6px 6px 6px;
@@ -424,7 +469,7 @@ button {
         &.owner {
           flex-direction: row-reverse;
           .chatContent {
-            background-color: var(--primary-color);
+            background-color: var(--owner-chat-bg-color);
             border-radius: 6px 0px 6px 6px;
             -webkit-border-radius: 6px 0px 6px 6px;
             -moz-border-radius: 6px 0px 6px 6px;
@@ -452,10 +497,27 @@ button {
         border: none;
         outline: none;
         color: var(--main-font-color);
-        &:hover{
+        &:hover {
           background-color: var(--hover-color);
         }
       }
     }
   }
 }
+
+
+.loader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--primary-color);
+  --_m:     conic-gradient(#0000 10%,#000),    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+  mask: var(--_m);
+  -webkit-mask-composite: source-out;
+  mask-composite: subtract;
+  animation: spinner 1s infinite linear;
+  -webkit-animation: spinner 1s infinite linear;
+}
+@keyframes spinner {to{transform: rotate(1turn)}}
