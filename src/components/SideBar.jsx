@@ -5,9 +5,14 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { IoCloseSharp } from "react-icons/io5";
+import Loading from "../Pages/Loading";
 
 const Sidebar = ({ openBar, setOpenBar }) => {
-  const { currentUser, signOutHandler, setLoading } = useAuth();
+  const [userName, setUserName] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [searchUser, setSearchUser] = useState(null);
+  const { currentUser, signOutHandler, setLoading, search, loading } =
+    useAuth();
   const navigate = useNavigate();
   const handleSignOut = async () => {
     try {
@@ -18,12 +23,16 @@ const Sidebar = ({ openBar, setOpenBar }) => {
     setLoading(false);
   };
 
-  // useEffect(
-  //   (_) => {
-  //     !currentUser && navigate("/login");
-  //   },
-  //   [currentUser]
-  // );
+  const handelSearch = async (displayName) => {
+    if (!userName) {
+      setSearchUser(null);
+      return;
+    }
+    setSearchLoading(true);
+    let a = await search(displayName);
+    setSearchUser(a);
+    setSearchLoading(false);
+  };
 
   return (
     <div className={`sidebar ${openBar && "open"}`}>
@@ -41,8 +50,27 @@ const Sidebar = ({ openBar, setOpenBar }) => {
         </div>
       </div>
       <div className="search">
-        <input type="text" placeholder="Search or start a new chat" />
+        <input
+          type="text"
+          placeholder="Search or start a new chat"
+          onChange={(e) => setUserName(e.target.value)}
+          onKeyDown={(e) => e.code == "Enter" && handelSearch(userName)}
+        />
         <VscSearch className="searchIco" />
+        {searchLoading && <p>loading...</p>}
+        {searchUser && (
+          <div className="search-result">
+            <img src={searchUser.photoURL} alt="" className="CsAvatar" />
+            <div className="CsInfo">
+              <div className="CsName">
+                <span>{searchUser.displayName}</span>
+              </div>
+              <div className="CsLastMessage">
+                <span>yeah</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <ul className="conversationList">
         {Array.from({ length: 100 }).map((e, i) => {

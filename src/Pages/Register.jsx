@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const schema = yup.object().shape({
   firstName: yup.string().min(3).required(),
@@ -20,6 +21,7 @@ const schema = yup.object().shape({
 });
 
 const Register = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const {
@@ -40,11 +42,11 @@ const Register = () => {
       await signUp(data.email, data.password, avatar, displayName);
       navigate("/");
     } catch (error) {
-    console.log('error: ', error);
+      console.log("error: ", error);
+      setError(true);
     }
     setLoading(false);
   };
-
 
   if (loading) {
     return <Loading />;
@@ -85,8 +87,18 @@ const Register = () => {
         </label>
 
         <label>
-          <input {...register("password")} type="password" className="input" />
+          <input
+            {...register("password")}
+            type={showPassword ? "text" : "password"}
+            className="input"
+          />
           <span>Password</span>
+          <div
+            onClick={() => setShowPassword(!showPassword)}
+            className="show-pass"
+          >
+            {showPassword ? <FiEyeOff /> : <FiEye />}
+          </div>
           {errors.password && (
             <p className="error">{errors.password.message}</p>
           )}
@@ -94,7 +106,7 @@ const Register = () => {
         <label>
           <input
             {...register("confirmPassword")}
-            type="password"
+            type={showPassword ? "text" : "password"}
             className="input"
           />
           <span>Confirm password</span>

@@ -11,12 +11,23 @@ import {
 } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // ***********
+  // signUp func
+  // ***********
   const signUp = async (email, password, file, displayName) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     setLoading(true);
@@ -34,15 +45,50 @@ const AuthProvider = ({ children }) => {
       email,
       uid: res.user.uid,
     });
+    await setDoc(doc(db, "userChats", res.user.uid),{})
   };
+
+  // ********
+  // singIN func
+  // ********
   const signIn = async (email, password) =>
     signInWithEmailAndPassword(auth, email, password);
 
+  // ***********
+  // signOut func
+  // ***********
   const signOutHandler = () => signOut(auth);
+  // *************
+  // reset password func
+  // *************
+  const resetPassword = (email) => sendPasswordResetEmail(auth, email);
 
+  // ***********
+  // search func
+  // ***********
+  const search = async (userName) => {
+    try {
+      let user;
+      const q = query(
+        collection(db, "users"),
+        where("displayName", "==", userName),
+        where("displayName", "!=", currentUser.displayName)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((element) => {
+        user = element.data();
+      });
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // *************
+  // change current user stet
+  // *************
   useEffect(() => {
     const updateLogStatus = onAuthStateChanged(auth, (user) => {
-      console.log("user: ", user);
       setCurrentUser(user);
       setLoading(false);
     });
@@ -60,6 +106,8 @@ const AuthProvider = ({ children }) => {
         signOutHandler,
         loading,
         setLoading,
+        resetPassword,
+        search,
       }}
     >
       {children}
