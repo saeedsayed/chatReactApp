@@ -1,92 +1,47 @@
 import React, { useEffect, useState } from "react";
-import avatar from "../assets/avatar.webp";
-import { VscSearch } from "react-icons/vsc";
+import SideHeader from "./SideHeader";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
-import { IoCloseSharp } from "react-icons/io5";
-import Loading from "../Pages/Loading";
+import { db } from "../firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+import Search from "./Search";
+import { useConversation } from "../context/ConversationContext";
 
 const Sidebar = ({ openBar, setOpenBar }) => {
-  const [userName, setUserName] = useState(null);
-  const [searchLoading, setSearchLoading] = useState(false)
-  const [searchUser, setSearchUser] = useState(null);
-  const { currentUser, signOutHandler, setLoading, search, loading } =
-    useAuth();
-  const navigate = useNavigate();
-  const handleSignOut = async () => {
-    try {
-      setLoading(true);
-      await signOutHandler();
-      navigate("/login");
-    } catch {}
-    setLoading(false);
-  };
+  const { currentUser } = useAuth();
+  const { showConversation } = useConversation()
+  const [conversations, setConversations] = useState([]);
 
-  const handelSearch = async (displayName) => {
-    if (!userName) {
-      setSearchUser(null);
-      return;
-    }
-    setSearchLoading(true);
-    let a = await search(displayName);
-    setSearchUser(a);
-    setSearchLoading(false);
-  };
+  const handleSelect = (id ) =>{
+    showConversation(id)
+    setOpenBar(false)
+  }
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+      setConversations(Object.entries(doc.data()));
+    });
+    return () => unsub();
+  }, [currentUser.uid]);
 
   return (
     <div className={`sidebar ${openBar && "open"}`}>
-      <div className="sideHeader">
-        <img src={logo} alt="" className="logo" />
-        <div className="userOpt">
-          <img src={currentUser.photoURL} alt="avatar " />
-          <h3 className="name">{currentUser.displayName}</h3>
-          <button className="logout" onClick={handleSignOut}>
-            logout
-          </button>
-          <button className="closeBar" onClick={(_) => setOpenBar(false)}>
-            <IoCloseSharp />
-          </button>
-        </div>
-      </div>
-      <div className="search">
-        <input
-          type="text"
-          placeholder="Search or start a new chat"
-          onChange={(e) => setUserName(e.target.value)}
-          onKeyDown={(e) => e.code == "Enter" && handelSearch(userName)}
-        />
-        <VscSearch className="searchIco" />
-        {searchLoading && <p>loading...</p>}
-        {searchUser && (
-          <div className="search-result">
-            <img src={searchUser.photoURL} alt="" className="CsAvatar" />
-            <div className="CsInfo">
-              <div className="CsName">
-                <span>{searchUser.displayName}</span>
-              </div>
-              <div className="CsLastMessage">
-                <span>yeah</span>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      <SideHeader setOpenBar={setOpenBar} />
+      <Search />
       <ul className="conversationList">
-        {Array.from({ length: 100 }).map((e, i) => {
+        {conversations.sort((a,b)=> b[1].date - a[1].date).map((e) => {
           return (
             <li
-              key={i}
+              key={e[0]}
               className="conversation"
-              onClick={(_) => setOpenBar(false)}
+              onClick={(_) =>handleSelect(e[0]) }
             >
-              <img src={avatar} alt="" className="CsAvatar" />
+              <img src={e[1].userInfo.photoURL} alt="" className="CsAvatar" />
               <div className="CsInfo">
                 <div className="CsName">
-                  <span>testName</span>
+                  <span>{e[1].userInfo.displayName}</span>
                 </div>
                 <div className="CsLastMessage">
-                  <span>yeah</span>
+                  <span>{e[1]?.lastMessage}</span>
                 </div>
               </div>
             </li>

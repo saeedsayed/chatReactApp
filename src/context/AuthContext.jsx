@@ -12,13 +12,10 @@ import {
 import { auth, db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {
-  collection,
   doc,
-  getDocs,
-  query,
   setDoc,
-  where,
 } from "firebase/firestore";
+
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -45,47 +42,34 @@ const AuthProvider = ({ children }) => {
       email,
       uid: res.user.uid,
     });
-    await setDoc(doc(db, "userChats", res.user.uid),{})
+    await setDoc(doc(db, "userChats", res.user.uid), {});
   };
 
   // ********
   // singIN func
   // ********
-  const signIn = async (email, password) =>
-    signInWithEmailAndPassword(auth, email, password);
+  const signIn = async (email, password) => {
+      setLoading(true);
+      await signInWithEmailAndPassword(auth, email, password);
+  };
 
   // ***********
   // signOut func
   // ***********
-  const signOutHandler = () => signOut(auth);
+  const signOutHandler = async () => {
+    try {
+      setLoading(true);
+      await signOut(auth);
+    } catch {}
+    setLoading(false);
+  };
   // *************
   // reset password func
   // *************
   const resetPassword = (email) => sendPasswordResetEmail(auth, email);
 
-  // ***********
-  // search func
-  // ***********
-  const search = async (userName) => {
-    try {
-      let user;
-      const q = query(
-        collection(db, "users"),
-        where("displayName", "==", userName),
-        where("displayName", "!=", currentUser.displayName)
-      );
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((element) => {
-        user = element.data();
-      });
-      return user;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // *************
-  // change current user stet
+  // change current user state
   // *************
   useEffect(() => {
     const updateLogStatus = onAuthStateChanged(auth, (user) => {
@@ -107,7 +91,6 @@ const AuthProvider = ({ children }) => {
         loading,
         setLoading,
         resetPassword,
-        search,
       }}
     >
       {children}

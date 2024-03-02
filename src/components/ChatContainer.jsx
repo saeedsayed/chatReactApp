@@ -1,60 +1,68 @@
-import React from 'react';
-import avatar from '../assets/avatar.webp'
-import bg from '../assets/bg.jpg'
+import React, { useEffect, useRef } from "react";
+import avatar from "../assets/avatar.webp";
+import bg from "../assets/bg.jpg";
 import { AiOutlineSend } from "react-icons/ai";
 import { PiUsersThreeBold } from "react-icons/pi";
 import { IoCloseSharp } from "react-icons/io5";
+import { useConversation } from "../context/ConversationContext";
+import { useAuth } from "../context/AuthContext";
+import SendInput from "./SendInput";
 
+const ChatContainer = ({ setOpenBar, openBar }) => {
+  const { currentConversation, userInfo } = useConversation();
+  const { currentUser } = useAuth();
+  const ref = useRef();
 
-const ChatContainer = ({setOpenBar,openBar}) => {
+  useEffect(() => {}, ref.current?.scrollIntoView({ behavior: "smooth" }), [
+    currentConversation,
+  ]);
+  return (
+    <div className="chatContainer">
+      {userInfo ? (
+        <>
+          <div className="chatHeader">
+            <div className="chatUser">
+              <img src={userInfo?.photoURL} alt="" />
+              <h3>{userInfo?.displayName}</h3>
+              <button onClick={(_) => setOpenBar(!openBar)}>
+                {openBar ? <IoCloseSharp /> : <PiUsersThreeBold />}
+              </button>
+            </div>
+          </div>
+          <div className="chatBox">
+            {currentConversation?.map((m, i) => (
+              <div
+                ref={ref}
+                key={i}
+                className={`chatMessage ${
+                  m.senderId == currentUser.uid && "owner"
+                } `}
+              >
+                <div className="chatImg">
+                  <img
+                    src={
+                      m.senderId == currentUser.uid
+                        ? currentUser?.photoURL
+                        : userInfo?.photoURL
+                    }
+                    alt=""
+                  />
+                </div>
 
-    return (
-        <div className='chatContainer'>
-            <div className="chatHeader">
-                <div className="chatUser">
-                    <img src={avatar} alt="" />
-                    <h3>Saeed</h3>
+                <div className="chatContent">
+                  <p>{m.text}</p>
+                  {m.image && <img src={m.image} alt="" />}
                 </div>
-                <button onClick={_=>setOpenBar(!openBar)}>
-                    {openBar?<IoCloseSharp/>:<PiUsersThreeBold/>}
-                </button>
-            </div>
-            <div className="chatBox">
-                <div className="chatMessage">
-                    <div className="chatImg">
-                        <img src={avatar} alt="" />
-                    </div>
-                    <div className="chatContent">
-                        <p>How are you?</p>
-                    </div>
-                </div>
-                <div className="chatMessage owner">
-                    <div className="chatImg">
-                        <img src={avatar} alt="" />
-                    </div>
-                    <div className="chatContent">
-                        <p>i'm fine</p>
-                        <img src={bg} alt="" />
-                    </div>
-                </div>
-                <div className="chatMessage owner">
-                    <div className="chatImg">
-                        <img src={avatar} alt="" />
-                    </div>
-                    <div className="chatContent">
-                        <p>i'm fine</p>
-                        <img src={bg} alt="" />
-                    </div>
-                </div>
-            </div>
-            <div className="sendFiled">
-                <button><AiOutlineSend /></button>
-                <button><AiOutlineSend /></button>
-                <input type="text" placeholder='Type a message'/>
-                <button><AiOutlineSend /></button>
-            </div>
-        </div>
-    );
-}
+              </div>
+            ))}
+          </div>
+          <SendInput />
+        </>
+      ) : (
+        <div>chose conversation</div>
+      )}
+    </div>
+  );
+};
 
 export default ChatContainer;
