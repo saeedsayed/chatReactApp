@@ -61,14 +61,6 @@ const Search = () => {
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
-        // await updateDoc(doc(db, "userChats", searchUser.uid), {
-        //   [combinedId + ".userInfo"]: {
-        //     displayName: currentUser.displayName,
-        //     photoURL: currentUser.photoURL,
-        //     uid: currentUser.uid,
-        //   },
-        //   [combinedId + ".date"]: serverTimestamp(),
-        // });
       }
       showConversation(combinedId)
     } catch (error) {

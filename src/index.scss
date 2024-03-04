@@ -446,7 +446,8 @@ button {
     flex: 1;
     .chatHeader {
       border-block-end: 1px solid var(--border-color);
-      padding: 20px;
+      padding: 10px 20px;
+      height: 46px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -455,8 +456,8 @@ button {
         align-items: center;
         gap: 12px;
         img {
-          width: 40px;
-          height: 40px;
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
           -webkit-border-radius: 50%;
           -moz-border-radius: 50%;
@@ -489,7 +490,7 @@ button {
       display: flex;
       flex-direction: column;
       gap: 5px;
-      height: calc(100% - 135px);
+      height: calc(100% - 92px);
       min-height: 0;
       overflow: auto;
       position: relative;
@@ -532,6 +533,11 @@ button {
             width: 100%;
           }
         }
+        .chatTime{
+          color: var(--secondary-font-color);
+          font-size: 0.8rem;
+          margin-block-start: 5px;
+        }
         &.owner {
           flex-direction: row-reverse;
           .chatContent {
@@ -547,7 +553,8 @@ button {
     }
     .sendFiled {
       display: flex;
-      height: 56px;
+      height: 46px;
+      position: relative;
       input {
         flex: 1;
         outline: none;
@@ -555,10 +562,30 @@ button {
         background-color: transparent;
         color: var(--main-font-color);
         padding-inline-start: 9px;
+        &[type="file"] {
+          display: none;
+        }
       }
-      button {
+      .preview-image {
+        position: absolute;
+        width: 100px;
+        height: auto;
+        bottom: 105%;
+        left: 10px;
+        z-index: 99;
+        border: 2px solid var(--owner-chat-bg-color);
+        opacity: 0.4;
+        &:hover {
+          opacity: 1;
+        }
+      }
+      .sendFiled-btn {
         padding-inline: 14px;
         font-size: 1.2rem;
+        display: flex;
+        height: 100%;
+        cursor: pointer;
+        align-items: center;
         background-color: transparent;
         border: none;
         outline: none;
@@ -568,6 +595,39 @@ button {
         }
       }
     }
+  }
+}
+
+.full-screen-image {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000098;
+  padding: 25px;
+  z-index: 99999;
+  button {
+    padding: 3px 7px 0;
+    position: absolute;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: var(--main-font-color);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    &:hover {
+      background-color: var(--hover-color);
+    }
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    display: block;
   }
 }
 

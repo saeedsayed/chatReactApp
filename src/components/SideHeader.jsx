@@ -7,7 +7,7 @@ const SideHeader = ({ setOpenBar }) => {
 
   return (
     <div className="sideHeader">
-      <img src={logo} alt="" className="logo" />
+      {/* <img src={logo} alt="" className="logo" /> */}
       <div className="userOpt">
         <img src={currentUser.photoURL} alt="avatar " />
         <h3 className="name">{currentUser.displayName}</h3>

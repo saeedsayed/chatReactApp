@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Sidebar, ChatContainer } from "../components";
 import { useAuth } from "../context/AuthContext";
 import Loading from "./Loading";
+import FullScreenImage from "../components/FullScreenImage";
 
 const Home = () => {
   const [openBar, setOpenBar] = useState(false);
@@ -11,6 +12,7 @@ const Home = () => {
   }
   return (
     <div className="homeLayOut">
+      <FullScreenImage/>
       <Sidebar openBar={openBar} setOpenBar={setOpenBar} />
       <ChatContainer openBar={openBar} setOpenBar={setOpenBar} />
     </div>
