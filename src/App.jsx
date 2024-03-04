@@ -1,10 +1,10 @@
 import Home from "./Pages/Home";
-import Loading from "./Pages/Loading";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./context/ProtectedRoute";
 import ResetPassword from "./Pages/ResetPassword";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
   return (

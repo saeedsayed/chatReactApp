@@ -24,18 +24,23 @@ const Login = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const { signIn, loading, setLoading } = useAuth();
+  const { signIn, loading, setLoading, currentUser } = useAuth();
   const navigate = useNavigate();
 
   const submitForm = async (data) => {
     try {
       await signIn(data.email, data.password);
-      navigate("/");
-    } catch (error){
+    } catch (error) {
       setError(true);
     }
     setLoading(false);
   };
+  useEffect((_) => {
+    console.log(currentUser);
+    if (currentUser) {
+      navigate("/");
+    }
+  }, [currentUser]);
   if (loading) {
     return <Loading />;
   }

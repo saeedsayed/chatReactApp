@@ -22,7 +22,8 @@ const Search = () => {
   const { currentUser } = useAuth();
   const { showConversation } = useConversation();
 
-  const handelSearch = async () => {
+  const handelSearch = async (e) => {
+    e.preventDefault();
     if (!searchName) {
       setSearchUser("");
       return;
@@ -72,14 +73,23 @@ const Search = () => {
 
   return (
     <div className="search">
-      <input
+      <form onSubmit={e=>handelSearch(e)}>
+        <input
+          type="text"
+          className="searchInput"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+        />
+        <VscSearch className="searchIcon" onClick={handelSearch} />
+      </form>
+      {/* <input
         type="text"
         placeholder="Search or start a new chat"
         onChange={(e) => setSearchName(e.target.value)}
-        onKeyDown={(e) => e.code == "Enter" && handelSearch()}
+        onSubmit={(e) => handelSearch()}
         value={searchName}
       />
-      <VscSearch className="searchIco" />
+      <VscSearch className="searchIco" /> */}
       {searchLoading && <p>loading...</p>}
       {searchUser && (
         <div className="search-result" onClick={handleSelect}>
@@ -87,9 +97,6 @@ const Search = () => {
           <div className="CsInfo">
             <div className="CsName">
               <span>{searchUser.displayName}</span>
-            </div>
-            <div className="CsLastMessage">
-              <span>yeah</span>
             </div>
           </div>
         </div>

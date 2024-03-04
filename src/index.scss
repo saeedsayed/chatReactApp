@@ -80,6 +80,55 @@ button {
   background-color: var(--bg-color);
 }
 
+.alert-popup{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: #000000b2;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .alert-body{
+    text-align: center;
+    width: 420px;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    border: 2px solid var(--border-color);
+    box-shadow: -3px 10px 20px 0px rgba(0, 0, 0, 0.194);
+    @include mobile {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      box-shadow: unset;
+    }
+    button {
+      border: none;
+      outline: none;
+      background-color: var(--primary-color);
+      padding: 10px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.1rem;
+      width: 65px;
+      margin-block-start: 22px;
+      &.yes-btn{
+        background-color: var(--secondary-font-color);
+        margin-inline-end: 22px;
+        &:hover{
+          background-color: var(--hover-color);
+        }
+      }
+      &:hover {
+        background-color: #197c49;
+      }
+    }
+  }
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -360,10 +409,11 @@ button {
         border-block-end: 2px solid var(--primary-color);
         background-color: rgba(0, 0, 0, 0.301);
       }
-      .searchIco {
+      .searchIcon {
         position: absolute;
         left: 8px;
         top: 8px;
+        cursor: pointer;
       }
       .search-result {
         display: flex;
@@ -463,6 +513,7 @@ button {
           -moz-border-radius: 50%;
           -ms-border-radius: 50%;
           -o-border-radius: 50%;
+          cursor: pointer;
         }
       }
       button {
@@ -496,9 +547,9 @@ button {
       position: relative;
       padding: 20px;
       z-index: 1;
-      background-image: url(./assets/bg.jpg);
-      background-size: contain;
-      background-position: center center;
+      // background-image: url(./assets/bg.jpg);
+      // background-size: contain;
+      // background-position: center center;
       // ****************************
       .chatMessage {
         display: flex;
@@ -603,15 +654,20 @@ button {
   width: 100vw;
   height: 100vh;
   background-color: #00000098;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 25px;
   z-index: 99999;
   button {
     padding: 3px 7px 0;
     position: absolute;
+    top: 10px;
+    right: 10px;
     font-size: 1.5rem;
     cursor: pointer;
     border-radius: 8px;
-    background-color: transparent;
+    background-color: red;
     border: none;
     outline: none;
     color: var(--main-font-color);

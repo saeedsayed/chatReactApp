@@ -59,7 +59,6 @@ const Message = ({ m }) => {
       </div>
       <div className="chatTime">
         <span>{unixTimestampToDate(m.date.seconds)}</span>
-        {console.log(m.date)}
       </div>
     </div>
   );
