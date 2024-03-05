@@ -9,7 +9,7 @@ import { useFullImage } from "../context/FullScreenImageContext";
 
 const ChatContainer = ({ setOpenBar, openBar }) => {
   const { currentConversation, userInfo } = useConversation();
-  const {setShowFullScreenImage, setImageSrc} = useFullImage()
+  const { setShowFullScreenImage, setImageSrc } = useFullImage();
 
   return (
     <div className="chatContainer">
@@ -25,7 +25,6 @@ const ChatContainer = ({ setOpenBar, openBar }) => {
               }}
             />
           )}
-
           <h5>{userInfo?.displayName}</h5>
         </div>
         <button onClick={(_) => setOpenBar(!openBar)}>

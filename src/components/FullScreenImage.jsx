@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { useFullImage } from "../context/FullScreenImageContext";
 import { IoClose } from "react-icons/io5";
 

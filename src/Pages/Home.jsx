@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Sidebar, ChatContainer } from "../components";
+import { Sidebar, ChatContainer } from "../components/indexComponents";
 import { useAuth } from "../context/AuthContext";
 import Loading from "./Loading";
 import FullScreenImage from "../components/FullScreenImage";

@@ -49,7 +49,7 @@ const SendInput = () => {
       });
       await updateDoc(doc(db, "userChats", currentUser.uid), {
         [chatId + ".date"]: serverTimestamp(),
-        [chatId + ".lastMessage"]: text,
+        [chatId + ".lastMessage"]: text||'photo',
       });
       await updateDoc(doc(db, "userChats", userInfo.uid), {
         [chatId + ".userInfo"]: {
@@ -58,7 +58,7 @@ const SendInput = () => {
           uid: currentUser.uid,
         },
         [chatId + ".date"]: serverTimestamp(),
-        [chatId + ".lastMessage"]: text,
+        [chatId + ".lastMessage"]: text||'photo',
       });
       setText("");
       setImage(null);
