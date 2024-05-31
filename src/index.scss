@@ -88,6 +88,111 @@ button {
   }
 }
 
+.hint-box {
+  position: relative;
+  & .hint-box-content-hint {
+    position: absolute;
+    text-align: center;
+    width: 150px;
+    padding: 7px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: var(--scroll-bar-color);
+    border: 1px solid var(--border-color);
+    box-shadow: -3px 10px 20px 0px rgba(0, 0, 0, 0.194);
+    font-size: 0.8rem;
+    font-weight: 100;
+    color: var(--bg-color);
+    z-index: 999;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    &.R,
+    &.L {
+      top: 50%;
+      transform: translate(0%, -50%);
+      -webkit-transform: translate(0%, -50%);
+      -moz-transform: translate(0%, -50%);
+      -ms-transform: translate(0%, -50%);
+      -o-transform: translate(0%, -50%);
+      &::after {
+        top: 50%;
+        transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+      }
+    }
+    &.T,
+    &.B {
+      left: 50%;
+      transform: translateX(-50%);
+      -webkit-transform: translateX(-50%);
+      -moz-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+      -o-transform: translateX(-50%);
+      &::after {
+        left: 50%;
+        transform: translateX(-50%);
+        -webkit-transform: translateX(-50%);
+        -moz-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        -o-transform: translateX(-50%);
+      }
+    }
+    &.R {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      left: calc(100% + 20px);
+      animation: hint-box-R 2s linear infinite alternate;
+      &::after {
+        border-color: transparent var(--scroll-bar-color) transparent
+          transparent;
+        right: 100%;
+      }
+    }
+    &.L {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      right: calc(100% + 20px);
+      animation: hint-box-L 2s linear infinite alternate;
+      &::after {
+        border-color: transparent transparent transparent
+          var(--scroll-bar-color);
+        left: 100%;
+      }
+    }
+    &.T {
+      bottom: calc(100% + 20px);
+      animation: hint-box-T 2s linear infinite alternate;
+      &::after {
+        border-color: var(--scroll-bar-color) transparent transparent
+          transparent;
+        top: 100%;
+      }
+    }
+    &.B {
+      top: calc(100% + 20px);
+      animation: hint-box-B 2s linear infinite alternate;
+      &::after {
+        border-color: transparent transparent var(--scroll-bar-color)
+          transparent;
+        bottom: 100%;
+      }
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 14px 14px 14px 14px;
+    }
+  }
+}
+
 .alert-popup {
   position: absolute;
   width: 100vw;
@@ -200,7 +305,7 @@ button {
       background-color: var(--bg-color);
     }
 
-    .input+span {
+    .input + span {
       position: absolute;
       left: 10px;
       top: 35px;
@@ -214,19 +319,19 @@ button {
       border-color: var(--primary-color);
     }
 
-    .input:placeholder-shown+span {
+    .input:placeholder-shown + span {
       top: 15px;
       font-size: 0.9rem;
     }
 
-    .input:focus+span {
+    .input:focus + span {
       color: var(--primary-color);
     }
 
     .inputAvatar {
       display: none;
 
-      &+span {
+      & + span {
         cursor: pointer;
         display: block;
         border: 1px dashed black;
@@ -241,12 +346,12 @@ button {
         justify-content: center;
       }
 
-      &+span:hover {
+      & + span:hover {
         border: 1px dashed var(--primary-color);
         background-color: var(--hover-color);
       }
 
-      &:valid+span::after {
+      &.valid + span::after {
         content: "👍";
         position: absolute;
         inset: 0;
@@ -552,7 +657,7 @@ button {
   .chatContainer {
     // padding: 20px;
     flex: 1;
-    
+
     .chatHeader {
       border-block-end: 1px solid var(--border-color);
       padding: 10px 20px;
@@ -604,6 +709,7 @@ button {
     .chatBox {
       display: flex;
       flex-direction: column;
+      // justify-content: flex-end;
       gap: 5px;
       height: calc(100% - 92px);
       min-height: 0;
@@ -611,12 +717,14 @@ button {
       position: relative;
       padding: 20px;
       z-index: 1;
-      background: repeating-radial-gradient(transparent, #000 , var(--bg-color) 1px, transparent 1px);
+      background: repeating-radial-gradient(
+        transparent,
+        #000,
+        var(--bg-color) 1px,
+        transparent 1px
+      );
       background-size: 30px 30px;
-      // background-image: url(./assets/bg.jpg);
-      // background-size: contain;
-      // background-position: center center;
-      // ****************************
+
       .chatMessage {
         display: flex;
         gap: 10px;
@@ -662,6 +770,7 @@ button {
 
         &.owner {
           flex-direction: row-reverse;
+
           .chatContent {
             background-color: var(--owner-chat-bg-color);
             border-radius: 6px 0px 6px 6px;
@@ -671,6 +780,33 @@ button {
             -o-border-radius: 6px 0px 6px 6px;
           }
         }
+      }
+    }
+
+    .starting-tip {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: var(--main-font-color);
+      font-size: 1.8rem;
+      width: 100%;
+      height: 100%;
+
+      & p {
+        width: 75%;
+        background-color: var(--primary-color);
+        padding: 12px;
+        text-align: center;
+        border-radius: 14px;
+        -webkit-border-radius: 14px;
+        -moz-border-radius: 14px;
+        -ms-border-radius: 14px;
+        -o-border-radius: 14px;
+        animation: starting-tip-opacity infinite 2s ease-in-out
+          alternate-reverse;
+        -webkit-animation: starting-tip-opacity infinite 2s ease-in-out
+          alternate-reverse;
       }
     }
 
@@ -786,5 +922,48 @@ button {
 @keyframes spinner {
   to {
     transform: rotate(1turn);
+  }
+}
+
+@keyframes starting-tip-opacity {
+  0% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hint-box-T {
+  from {
+    transform: translate(-50%, 0);
+  }
+  to {
+    transform: translate(-50%, -20px);
+  }
+}
+@keyframes hint-box-R {
+  from {
+    transform: translate(0, -50%);
+  }
+  to {
+    transform: translate(20px, -50%);
+  }
+}
+@keyframes hint-box-B {
+  from {
+    transform: translate(-50%, 0);
+  }
+  to {
+    transform: translate(-50%, 20px);
+  }
+}
+@keyframes hint-box-L {
+  from {
+    transform: translate(0, -50%);
+  }
+  to {
+    transform: translate(-20px, -50%);
   }
 }

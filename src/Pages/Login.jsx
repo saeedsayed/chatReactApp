@@ -36,7 +36,6 @@ const Login = () => {
     setLoading(false);
   };
   useEffect((_) => {
-    console.log(currentUser);
     if (currentUser) {
       navigate("/");
     }
@@ -66,7 +65,7 @@ const Login = () => {
             onClick={() => setShowPassword(!showPassword)}
             className="show-pass"
           >
-            {showPassword ? <FiEyeOff /> : <FiEye />}
+            {showPassword ? <FiEye /> : <FiEyeOff />}
           </div>
           {errors.password && (
             <p className="error">{errors.password.message}</p>

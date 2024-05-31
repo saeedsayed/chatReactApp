@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   query,
   serverTimestamp,
   setDoc,
@@ -14,16 +15,17 @@ import {
   where,
 } from "firebase/firestore";
 import { useConversation } from "../context/ConversationContext";
+import HintBox from "./HintBox";
 
 const Search = () => {
   const [searchName, setSearchName] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchUser, setSearchUser] = useState(null);
   const { currentUser } = useAuth();
-  const { showConversation } = useConversation();
+  const { showConversation, userInfo } = useConversation();
 
   const handelSearch = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     if (!searchName) {
       setSearchUser("");
       return;
@@ -33,7 +35,7 @@ const Search = () => {
       const q = query(
         collection(db, "users"),
         where("displayName", "==", searchName),
-        where("displayName", "!=", currentUser.displayName)
+        where("displayName", "!=", currentUser.displayName),
       );
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((element) => {
@@ -73,23 +75,18 @@ const Search = () => {
 
   return (
     <div className="search">
-      <form onSubmit={e=>handelSearch(e)}>
+      <HintBox hint={'search for users hear'} hintOff={!!userInfo} dir={'R'}>
         <input
           type="text"
           className="searchInput"
           value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
+          onChange={(e) => {
+            setSearchName(e.target.value)
+            handelSearch()
+          }}
         />
         <VscSearch className="searchIcon" onClick={handelSearch} />
-      </form>
-      {/* <input
-        type="text"
-        placeholder="Search or start a new chat"
-        onChange={(e) => setSearchName(e.target.value)}
-        onSubmit={(e) => handelSearch()}
-        value={searchName}
-      />
-      <VscSearch className="searchIco" /> */}
+      </HintBox>
       {searchLoading && <p>loading...</p>}
       {searchUser && (
         <div className="search-result" onClick={handleSelect}>

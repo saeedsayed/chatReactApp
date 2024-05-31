@@ -5,6 +5,7 @@ import SendInput from "./SendInput";
 import FullScreenImage from "./FullScreenImage";
 import Message from "./Message";
 import SideHeader from "./SideHeader";
+import HintBox from "./HintBox";
 
 
 export {
@@ -15,4 +16,5 @@ export {
     FullScreenImage,
     Message,
     SideHeader,
+    HintBox,
 }

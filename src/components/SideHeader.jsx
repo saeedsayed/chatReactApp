@@ -6,12 +6,6 @@ import { useState } from "react";
 const SideHeader = ({ setOpenBar }) => {
   const { currentUser, signOutHandler } = useAuth();
   const [alertPopUp, setAlertPopUp] = useState(false);
-  // const [resAlertPopUp, setResAlertPopUp] = useState(false);
-
-  // const handelSignOut = () => {
-  //   setAlertPopUp("Are you sure to log out");
-  //   signOutHandler();
-  // };
 
   return (
     <div className="sideHeader">
@@ -24,7 +18,6 @@ const SideHeader = ({ setOpenBar }) => {
           </div>
         </div>
       )}
-      {/* <img src={logo} alt="" className="logo" /> */}
       <div className="userOpt">
         <img src={currentUser.photoURL} alt="avatar " />
         <h3 className="name">{currentUser.displayName}</h3>

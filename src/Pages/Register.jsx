@@ -18,31 +18,31 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required(),
+  avatar: yup.mixed().test('required', "avatar is required field", (value) => {
+    return !!value[0]
+  }),
 });
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
-  const [avatar, setAvatar] = useState(null);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const { signUp, currentUser, loading, setLoading } = useAuth();
+  const { signUp, loading, setLoading } = useAuth();
   const navigate = useNavigate();
 
   const submitForm = async (data) => {
-    if (!avatar) return;
     try {
       const displayName = data.firstName + " " + data.lastName;
       setLoading(true);
-      await signUp(data.email, data.password, avatar, displayName);
+      await signUp(data.email, data.password, data.avatar[0], displayName);
       navigate("/");
     } catch (error) {
-      console.log("error: ", error);
       setError(true);
     }
     setLoading(false);
@@ -59,7 +59,7 @@ const Register = () => {
         <p className="message">Sign up now and get full access to our app. </p>
         {error && (
           <p className="error">
-            email is existing ! <Link to="/login">signin</Link>
+            email is existing ! <Link to="/login">sign in</Link>
           </p>
         )}
         <div className="flex">
@@ -97,7 +97,7 @@ const Register = () => {
             onClick={() => setShowPassword(!showPassword)}
             className="show-pass"
           >
-            {showPassword ? <FiEyeOff /> : <FiEye />}
+            {showPassword ? <FiEye /> : <FiEyeOff />}
           </div>
           {errors.password && (
             <p className="error">{errors.password.message}</p>
@@ -116,12 +116,9 @@ const Register = () => {
         </label>
         <label>
           <input
-            onChange={(e) => {
-              setAvatar(e.target.files[0]);
-            }}
-            required={true}
             type="file"
-            className="inputAvatar"
+            className={`inputAvatar ${dirtyFields.avatar && 'valid'}`}
+            {...register("avatar")}
           />
           <span>
             <LuImagePlus />

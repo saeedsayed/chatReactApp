@@ -15,9 +15,10 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { MdOutlineAddPhotoAlternate } from "react-icons/md";
 import { IoMicOutline } from "react-icons/io5";
 import { useFullImage } from "../context/FullScreenImageContext";
+import HintBox from "./HintBox";
 
 const SendInput = () => {
-  const { chatId, userInfo } = useConversation();
+  const { chatId, userInfo, currentConversation } = useConversation();
   const { currentUser } = useAuth();
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
@@ -49,7 +50,7 @@ const SendInput = () => {
       });
       await updateDoc(doc(db, "userChats", currentUser.uid), {
         [chatId + ".date"]: serverTimestamp(),
-        [chatId + ".lastMessage"]: text||'photo',
+        [chatId + ".lastMessage"]: text || 'photo',
       });
       await updateDoc(doc(db, "userChats", userInfo.uid), {
         [chatId + ".userInfo"]: {
@@ -58,11 +59,11 @@ const SendInput = () => {
           uid: currentUser.uid,
         },
         [chatId + ".date"]: serverTimestamp(),
-        [chatId + ".lastMessage"]: text||'photo',
+        [chatId + ".lastMessage"]: text || 'photo',
       });
       setText("");
       setImage(null);
-    } catch {}
+    } catch { }
     setIsSending(false);
   };
 
@@ -77,41 +78,45 @@ const SendInput = () => {
   }, [image]);
   if (isSending) return <div>sending...</div>;
   return (
-    <div className="sendFiled">
-      <button className="sendFiled-btn">
-        <IoMicOutline />
-      </button>
-      {image && (
-        <img
-          src={imagePreview}
-          alt=""
-          className="preview-image"
-          onClick={(_) => {
-            setShowFullScreenImage(true);
-            setImageSrc(imagePreview);
-          }}
-        />
-      )}
-      <label htmlFor="file-input">
-        <input
-          type="file"
-          id="file-input"
-          onChange={(e) => setImage(e.target.files[0])}
-        />
-        <span className="sendFiled-btn">
-          <MdOutlineAddPhotoAlternate />
-        </span>
-      </label>
-      <input
-        type="text"
-        placeholder="Type a message"
-        onChange={(e) => setText(e.target.value)}
-        value={text}
-      />
-      <button className="sendFiled-btn" onClick={handleSend}>
-        <AiOutlineSend />
-      </button>
-    </div>
+    <>
+      <HintBox dir={'T'} hintOff={!!currentConversation?.length} hint={'You can send a message using this field.'} >
+        <div className="sendFiled">
+          <button className="sendFiled-btn">
+            <IoMicOutline />
+          </button>
+          {image && (
+            <img
+              src={imagePreview}
+              alt=""
+              className="preview-image"
+              onClick={(_) => {
+                setShowFullScreenImage(true);
+                setImageSrc(imagePreview);
+              }}
+            />
+          )}
+          <label htmlFor="file-input">
+            <input
+              type="file"
+              id="file-input"
+              onChange={(e) => setImage(e.target.files[0])}
+            />
+            <span className="sendFiled-btn">
+              <MdOutlineAddPhotoAlternate />
+            </span>
+          </label>
+          <input
+            type="text"
+            placeholder="Type a message"
+            onChange={(e) => setText(e.target.value)}
+            value={text}
+          />
+          <button className="sendFiled-btn" onClick={handleSend}>
+            <AiOutlineSend />
+          </button>
+        </div>
+      </HintBox>
+    </>
   );
 };
 
